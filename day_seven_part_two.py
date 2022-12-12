@@ -65,13 +65,13 @@ def create_file_system(commands):
 
     return rootFolder
 
-def traverse_file_system(folder,target_folders):
+def traverse_file_system(folder,target_folders,target_size):
 
-    if folder.size() <= 100000:
+    if folder.size() >= target_size:
         target_folders.append(folder.size())
 
     for f in folder.folders.values():
-        traverse_file_system(f,target_folders)
+        traverse_file_system(f,target_folders,target_size)
 
 
 if __name__ == '__main__':
@@ -82,9 +82,19 @@ if __name__ == '__main__':
 
     rootFolder = create_file_system(commands)
 
+    total_space = 70000000
+
+    space_needed = 30000000
+
+    space_to_be_freed = space_needed - (total_space - rootFolder.size())
+
     target_folders = []
 
-    traverse_file_system(rootFolder,target_folders)
+    traverse_file_system(
+        folder=rootFolder,
+        target_folders=target_folders,
+        target_size=space_to_be_freed
+        )
 
-    print(sum(target_folders))
+    print(min(target_folders))
 
